@@ -1,1 +1,555 @@
-
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heromart - สินค้าคุณภาพเยี่ยม</title>
+  <style>
+    :root {
+      --primary: #3498db;
+      --secondary: #2ecc71;
+      --dark: #2c3e50;
+      --light: #f8f9fa;
+      --accent: #e74c3c;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Kanit', 'Prompt', sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      color: var(--dark);
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('/api/placeholder/1200/300') center/cover no-repeat;
+      opacity: 0.1;
+      z-index: 0;
+    }
+    
+    header .content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    header p {
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    nav {
+      background-color: white;
+      padding: 1rem 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    .categories {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+    
+    .categories li {
+      margin: 0.5rem;
+    }
+    
+    .categories button {
+      background-color: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      border-radius: 50px;
+      padding: 0.5rem 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .categories button:hover,
+    .categories button.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    main {
+      padding: 3rem 0;
+    }
+    
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .product-card {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 10px 15px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 20px rgba(0,0,0,0.1);
+    }
+    
+    .product-image {
+      height: 200px;
+      width: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    
+    .product-info {
+      padding: 1.5rem;
+    }
+    
+    .product-title {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+    }
+    
+    .product-price {
+      font-size: 1.5rem;
+      color: var(--accent);
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    
+    .product-description {
+      color: #555;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    
+    .buy-button {
+      display: inline-block;
+      background-color: var(--primary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+    }
+    
+    .buy-button:hover {
+      background-color: #2980b9;
+    }
+    
+    footer {
+      background-color: var(--dark);
+      color: white;
+      padding: 3rem 0;
+      text-align: center;
+    }
+    
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .social-links {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+    
+    .social-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      transition: background-color 0.3s ease;
+    }
+    
+    .social-icon:hover {
+      background-color: var(--primary);
+    }
+    
+    .copyright {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.6);
+    }
+    
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background-color: white;
+      border-radius: 10px;
+      max-width: 500px;
+      width: 90%;
+      padding: 2rem;
+      position: relative;
+      text-align: center;
+    }
+    
+    .close-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #888;
+      transition: color 0.3s ease;
+    }
+    
+    .close-modal:hover {
+      color: var(--accent);
+    }
+    
+    .modal h3 {
+      margin-bottom: 1rem;
+    }
+    
+    .modal p {
+      margin-bottom: 1.5rem;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+    
+    .modal-button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+    
+    .confirm-button {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .confirm-button:hover {
+      background-color: #2980b9;
+    }
+    
+    .cancel-button {
+      background-color: #e0e0e0;
+      color: #333;
+    }
+    
+    .cancel-button:hover {
+      background-color: #d0d0d0;
+    }
+    
+    /* Responsive Styling */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+      
+      .products {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .products {
+        grid-template-columns: 1fr;
+      }
+      
+      .categories button {
+        font-size: 0.9rem;
+        padding: 0.4rem 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="content">
+      <h1>HEROMART</h1>
+      <p>สินค้าคุณภาพ ส่งตรงถึงมือคุณ</p>
+    </div>
+  </header>
+  
+  <nav>
+    <div class="container">
+      <ul class="categories">
+        <li><button class="active" data-category="all">ทั้งหมด</button></li>
+        <li><button data-category="clothing">เสื้อผ้า</button></li>
+        <li><button data-category="accessories">อุปกรณ์เสริม</button></li>
+        <li><button data-category="collectibles">ของสะสม</button></li>
+        <li><button data-category="gadgets">แกดเจ็ต</button></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <main>
+    <div class="container">
+      <div class="products" id="products-container">
+        <!-- สินค้าจะถูกเพิ่มที่นี่โดย JavaScript -->
+      </div>
+    </div>
+  </main>
+  
+  <div class="modal" id="purchase-modal">
+    <div class="modal-content">
+      <span class="close-modal" id="close-modal">&times;</span>
+      <h3>ยืนยันการสั่งซื้อ</h3>
+      <p id="modal-product-info">คุณต้องการสั่งซื้อ <span id="product-name"></span> ในราคา <span id="product-price"></span> บาท ใช่หรือไม่?</p>
+      <div class="modal-buttons">
+        <button class="modal-button confirm-button" id="confirm-purchase">ยืนยันการสั่งซื้อ</button>
+        <button class="modal-button cancel-button" id="cancel-purchase">ยกเลิก</button>
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <h2>HEROMART</h2>
+        <p>ติดต่อเราได้ที่ช่องทางด้านล่าง</p>
+        <div class="social-links">
+          <a href="#" class="social-icon">FB</a>
+          <a href="#" class="social-icon">IG</a>
+          <a href="#" class="social-icon">TW</a>
+          <a href="#" class="social-icon">YT</a>
+        </div>
+        <p class="copyright">&copy; 2025 Heromart. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    // ข้อมูลสินค้า
+    const products = [
+      {
+        id: 1,
+        name: 'Hero T-Shirt',
+        price: 599,
+        description: 'เสื้อยืดคุณภาพสูง ลายพิมพ์คมชัด ใส่สบาย ผ้านุ่ม',
+        image: '/api/placeholder/400/300',
+        category: 'clothing'
+      },
+      {
+        id: 2,
+        name: 'Hero Cap',
+        price: 499,
+        description: 'หมวกแก๊ปสไตล์สปอร์ต ปรับขนาดได้ สวมใส่สบาย',
+        image: '/api/placeholder/400/300',
+        category: 'accessories'
+      },
+      {
+        id: 3,
+        name: 'Hero Figurine',
+        price: 1299,
+        description: 'โมเดลฟิกเกอร์ขนาด 15 ซม. คุณภาพสูง รายละเอียดคมชัด',
+        image: '/api/placeholder/400/300',
+        category: 'collectibles'
+      },
+      {
+        id: 4,
+        name: 'Hero Keychain',
+        price: 199,
+        description: 'พวงกุญแจโลหะคุณภาพดี แข็งแรงทนทาน',
+        image: '/api/placeholder/400/300',
+        category: 'accessories'
+      },
+      {
+        id: 5,
+        name: 'Hero Hoodie',
+        price: 1299,
+        description: 'เสื้อฮู้ดดีไซน์เท่ ผ้าหนานุ่ม ให้ความอบอุ่น',
+        image: '/api/placeholder/400/300',
+        category: 'clothing'
+      },
+      {
+        id: 6,
+        name: 'Hero Smartwatch',
+        price: 2999,
+        description: 'สมาร์ทวอทช์รุ่นล่าสุด ฟังก์ชันครบครัน เชื่อมต่อกับสมาร์ทโฟนได้',
+        image: '/api/placeholder/400/300',
+        category: 'gadgets'
+      },
+      {
+        id: 7,
+        name: 'Hero Bluetooth Speaker',
+        price: 1499,
+        description: 'ลำโพงบลูทูธคุณภาพสูง เสียงดังกระหึ่ม เบสหนัก',
+        image: '/api/placeholder/400/300',
+        category: 'gadgets'
+      },
+      {
+        id: 8,
+        name: 'Hero Comic Book',
+        price: 299,
+        description: 'หนังสือการ์ตูนสุดพิเศษ ฉบับจำกัด พิมพ์ลายเต็ม',
+        image: '/api/placeholder/400/300',
+        category: 'collectibles'
+      }
+    ];
+    
+    // แสดงสินค้า
+    function displayProducts(category = 'all') {
+      const productsContainer = document.getElementById('products-container');
+      productsContainer.innerHTML = '';
+      
+      const filteredProducts = category === 'all' 
+        ? products 
+        : products.filter(product => product.category === category);
+      
+      filteredProducts.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+        productCard.dataset.id = product.id;
+        
+        productCard.innerHTML = `
+          <img src="${product.image}" alt="${product.name}" class="product-image">
+          <div class="product-info">
+            <h3 class="product-title">${product.name}</h3>
+            <div class="product-price">฿${product.price.toLocaleString()}</div>
+            <p class="product-description">${product.description}</p>
+            <button class="buy-button" data-id="${product.id}">สั่งซื้อสินค้า</button>
+          </div>
+        `;
+        
+        productsContainer.appendChild(productCard);
+      });
+      
+      // เพิ่ม Event Listener สำหรับปุ่มซื้อสินค้า
+      document.querySelectorAll('.buy-button').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const productId = parseInt(e.target.dataset.id);
+          const product = products.find(p => p.id === productId);
+          openPurchaseModal(product);
+        });
+      });
+    }
+    
+    // การจัดการหมวดหมู่
+    const categoryButtons = document.querySelectorAll('.categories button');
+    categoryButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // ลบ class active จากปุ่มทั้งหมด
+        categoryButtons.forEach(btn => btn.classList.remove('active'));
+        // เพิ่ม class active ให้ปุ่มที่ถูกคลิก
+        button.classList.add('active');
+        // แสดงสินค้าตามหมวดหมู่
+        displayProducts(button.dataset.category);
+      });
+    });
+    
+    // การจัดการ Modal การซื้อสินค้า
+    const modal = document.getElementById('purchase-modal');
+    const closeModalBtn = document.getElementById('close-modal');
+    const confirmPurchaseBtn = document.getElementById('confirm-purchase');
+    const cancelPurchaseBtn = document.getElementById('cancel-purchase');
+    let currentProduct = null;
+    
+    function openPurchaseModal(product) {
+      currentProduct = product;
+      document.getElementById('product-name').textContent = product.name;
+      document.getElementById('product-price').textContent = product.price.toLocaleString();
+      modal.style.display = 'flex';
+    }
+    
+    function closePurchaseModal() {
+      modal.style.display = 'none';
+    }
+    
+    closeModalBtn.addEventListener('click', closePurchaseModal);
+    cancelPurchaseBtn.addEventListener('click', closePurchaseModal);
+    
+    // เมื่อคลิกที่พื้นที่ด้านนอกของ modal ให้ปิด modal
+    window.addEventListener('click', (event) => {
+      if (event.target === modal) {
+        closePurchaseModal();
+      }
+    });
+    
+    // ส่งข้อความไปที่ Facebook Messenger
+    confirmPurchaseBtn.addEventListener('click', () => {
+      if (currentProduct) {
+        const message = `สวัสดีครับ/ค่ะ ฉันสนใจสั่งซื้อสินค้า ${currentProduct.name} ราคา ${currentProduct.price.toLocaleString()} บาท`;
+        
+        // คุณสามารถเปลี่ยน URL ของ Facebook Page ได้ที่นี่
+        const fbPageUrl = 'https://m.me/yourpagename';
+        
+        // เข้ารหัส URL ของข้อความ
+        const encodedMessage = encodeURIComponent(message);
+        const fullUrl = `${fbPageUrl}?text=${encodedMessage}`;
+        
+        // เปิดหน้าต่างใหม่เพื่อส่งข้อความ
+        window.open(fullUrl, '_blank');
+        
+        closePurchaseModal();
+      }
+    });
+    
+    // แสดงสินค้าทั้งหมดเมื่อโหลดหน้าเว็บ
+    window.addEventListener('DOMContentLoaded', () => {
+      displayProducts();
+    });
+  </script>
+</body>
+</html>
